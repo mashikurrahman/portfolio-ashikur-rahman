@@ -34,13 +34,13 @@ export interface CVData {
 
 export const CV_DATA: CVData = {
   name: "MOHAMMAD ASHIKUR RAHMAN",
-  title: "Technical Content Writer | Medical Documentation Specialist | Customer Service Leader",
+  title: "Product Builder | Full-Stack & AI Automation Engineer | Technical Content & Medical Documentation Specialist",
   contact: {
     address: "Saidnagar, Vatara, Bangladesh (Remote)",
     email: "mashikurrahman7@gmail.com",
     phone: "01568148437"
   },
-  summary: "Accomplished technical content writer and medical documentation professional with 6+ years creating clear, user-friendly documentation across healthcare and technology sectors. Progressive career spanning customer service leadership, technical content creation, medical documentation, and web development. Expert in translating complex concepts into accessible language and delivering high-quality documentation meeting strict compliance standards.",
+  summary: "Accomplished product builder, technical content writer, and medical documentation professional with 6+ years of multi-disciplinary experience spanning full-stack development, AI automation workflows (n8n, Zapier), WordPress CMS engineering, clinical documentation, and customer support team leadership. Proven track record in translating complex architectures into high-converting products, building automated end-to-end pipelines, and delivering clinical documentation meeting strict HIPAA compliance.",
   experience: [
     {
       role: "Team Leader of Customer Service Department",
@@ -49,23 +49,23 @@ export const CV_DATA: CVData = {
       employmentType: "Full-time",
       period: "2025 – Present",
       highlights: [
-        "Lead and manage customer service team, ensuring high-quality support and satisfaction.",
-        "Oversee daily operations, team performance, and customer issue resolution.",
-        "Develop and implement customer service strategies and best practices.",
-        "Train and mentor team members on service excellence and company standards."
+        "Lead and manage customer service team, ensuring high-quality support and SLA adherence.",
+        "Oversee daily operations, team performance metrics, and rapid issue resolution workflows.",
+        "Implement automated customer service routing, ticketing pipelines, and best practices.",
+        "Train and mentor team members on service excellence, communication protocols, and brand standards."
       ]
     },
     {
-      role: "Sr. Technical Content Writer",
+      role: "Sr. Technical Content Writer & Web Builder",
       company: "BJIT",
       location: "Bangladesh",
       employmentType: "Full-time",
       period: "2021 – 2025",
       highlights: [
-        "Translated complex software and engineering concepts into clear, user-friendly technical documentation and content.",
-        "Wrote and optimized website content, product documentation, blogs, case studies aligned with business goals.",
-        "Collaborated with developers, product managers, and designers to ensure technical accuracy.",
-        "Executed SEO-driven content strategies to improve organic traffic, keyword rankings, and conversions."
+        "Translated complex software, cloud, and engineering concepts into clear, user-friendly technical documentation and architecture guides.",
+        "Developed and maintained WordPress CMS platforms, custom landing pages, and interactive case study portals.",
+        "Collaborated with developers, product managers, and UI/UX designers to guarantee technical accuracy.",
+        "Executed SEO-driven content strategies and technical keyword optimization, boosting organic search traffic and conversions."
       ]
     },
     {
@@ -75,28 +75,63 @@ export const CV_DATA: CVData = {
       employmentType: "Full-time",
       period: "July 2019 – March 2021",
       highlights: [
-        "Documented complete live patient encounters for 10+ US physicians with 95–100% accuracy.",
-        "Earned promotion from medical scribe to senior specialist; managed QA review of peer documentation.",
-        "Trained 5 new scribes on EMR workflows, medical terminology, and HIPAA standards."
+        "Documented complete live patient encounters for 10+ US physicians with 95–100% clinical accuracy.",
+        "Promoted from medical scribe to senior specialist; spearheaded peer review QA protocols.",
+        "Trained 5+ new scribes on EMR workflows, medical terminology, and HIPAA security standards."
       ]
     }
   ],
   coreCompetencies: [
     {
-      category: "Documentation",
-      items: ["SOAP Notes", "H&P Documentation", "Progress & Procedure Notes", "Orders, Imaging & Referrals", "E/M Documentation", "HIPAA Compliance"]
+      category: "AI & Workflow Automation",
+      items: [
+        "n8n (Self-Hosted & Cloud)",
+        "Zapier Multi-Step Automations",
+        "Make (Integromat)",
+        "LLM & Webhook Pipelines",
+        "Automated Lead Capture & CRM Routing",
+        "API Integrations & Data Sync"
+      ]
     },
     {
-      category: "Content & Writing",
-      items: ["Technical Writing", "Persuasive Copy", "SEO-Optimized Content", "Product Documentation", "User Research & Analysis"]
+      category: "CMS & Web Development",
+      items: [
+        "WordPress (Custom Themes & Plugins)",
+        "WooCommerce Storefronts",
+        "Elementor & Gutenberg Blocks",
+        "Headless WordPress & REST API",
+        "Webflow",
+        "React 19 & Next.js 16",
+        "Flutter / Dart"
+      ]
     },
     {
-      category: "Leadership",
-      items: ["Team Management", "Performance Monitoring", "Staff Training", "Service Standards", "Operational Excellence"]
+      category: "Medical & Technical Documentation",
+      items: [
+        "SOAP Notes & H&P Documentation",
+        "Clinical Charting (95–100% Accuracy)",
+        "E/M Coding & HIPAA Compliance",
+        "Developer API Docs & Manuals",
+        "Product Case Studies & SEO Content"
+      ]
+    },
+    {
+      category: "Leadership & Quality Operations",
+      items: [
+        "CS Team Leadership & SLA Management",
+        "Staff Mentorship & Training Programs",
+        "QA Peer Review Systems",
+        "Workflow Optimization & SOPs",
+        "Cross-Functional Team Collaboration"
+      ]
     }
   ],
   specialties: [
-    "Family Medicine", "Orthopedics", "Psychiatry", "Gynecology", "Pediatrics", "Oncology"
+    "AI Workflow Orchestration (n8n / Zapier)",
+    "WordPress & WooCommerce Engineering",
+    "Clinical Documentation (HIPAA / SOAP)",
+    "Full-Stack Web & Mobile Engineering",
+    "Technical Content Strategy & SEO"
   ],
   education: [
     {

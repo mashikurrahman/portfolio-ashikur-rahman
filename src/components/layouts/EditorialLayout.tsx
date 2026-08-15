@@ -103,9 +103,10 @@ const HireBadge: React.FC = () => {
 /* ─── Infinite-scroll marquee strip with edge masks ─── */
 const MarqueeStrip: React.FC = () => {
   const items = [
-    'Full-Stack Development', 'AI & LLM Integrations', 'Technical Content Writing',
-    'Medical Documentation', 'React 19 & Next.js 16', 'Flutter Mobile Apps',
-    'pgvector RAG Systems', 'HIPAA & Compliance Standards', 'Customer Service Leadership'
+    'AI Automations (n8n & Zapier)', 'WordPress & WooCommerce', 'Full-Stack Development',
+    'AI & LLM Integrations', 'Technical Content Writing', 'Medical Documentation',
+    'React 19 & Next.js 16', 'Flutter Mobile Apps', 'pgvector RAG Systems',
+    'HIPAA & Compliance Standards', 'Customer Service Leadership'
   ];
   const doubled = [...items, ...items];
   return (
@@ -208,6 +209,20 @@ export const EditorialLayout: React.FC = () => {
       image: CASE_STUDIES[3]?.image,
     },
     {
+      name: 'AI Automation & Workflow Engineering',
+      tags: ['n8n (Self-Hosted & Cloud)', 'Zapier Multi-Step Zaps', 'Make (Integromat)', 'Webhooks & APIs', 'LLM Agent Routing'],
+      description: 'Architecting end-to-end AI automation workflows, automated lead capture, CRM syncing, webhook event routing, and multi-step Zapier/n8n pipelines that eliminate manual operational overhead.',
+      highlights: ['n8n Self-Hosted & Cloud Pipelines', 'Zapier & Make Multi-Step Integrations', 'Automated AI Summarization & CRM Webhooks'],
+      image: CASE_STUDIES[2]?.image,
+    },
+    {
+      name: 'WordPress CMS & E-Commerce Development',
+      tags: ['WordPress', 'WooCommerce', 'Custom Themes & Plugins', 'Elementor / Gutenberg', 'Headless WP'],
+      description: 'Custom WordPress theme development, plugin integrations, WooCommerce storefronts, payment gateway configurations, and high-performance SEO landing pages.',
+      highlights: ['Custom WP Themes & Plugin Integrations', 'High-Converting WooCommerce Stores', 'Speed Optimization & Headless CMS Architecture'],
+      image: CASE_STUDIES[3]?.image,
+    },
+    {
       name: 'AI & LLM Product Building',
       tags: ['Google Gemini', 'Groq (Llama 3.1)', 'pgvector RAG', 'Cloudflare Workers AI'],
       description: 'Architecting privacy-first AI tools, retrieval-augmented generation systems, and intelligent assistants with multi-provider failover and smart automation.',
@@ -284,7 +299,7 @@ export const EditorialLayout: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="hero-subtitle"
         >
-          Product Builder, Technical Lead & AI Engineer based in Bangladesh
+          Product Builder, AI Automation Engineer & Technical Lead based in Bangladesh
         </motion.p>
 
         <div className="hero-body">
@@ -298,7 +313,7 @@ export const EditorialLayout: React.FC = () => {
             <TiltCard maxTilt={5}>
               <div className="hero-quote">
                 <div className="hero-quote-icon">“</div>
-                <p>Ashikur's engineering and documentation expertise transformed our clinical platform — highly recommended!</p>
+                <p>Ashikur's engineering, automation, and documentation expertise transformed our clinical platform — highly recommended!</p>
                 <div className="flex items-center gap-1 text-amber-500 mt-2 text-xs">
                   <Star size={13} fill="currentColor" />
                   <Star size={13} fill="currentColor" />
@@ -372,7 +387,10 @@ export const EditorialLayout: React.FC = () => {
               </div>
               <div className="hero-tag-row">
                 <span className="tag-pill tag-dark">
-                  <span className="tag-icon">✦</span> React 19 & Next.js
+                  <span className="tag-icon">⚡</span> n8n & Zapier AI
+                </span>
+                <span className="tag-pill tag-light">
+                  <span className="tag-dot" /> WordPress & CMS
                 </span>
               </div>
               <div className="hero-tag-row">

@@ -59,16 +59,16 @@ export const PROFILE_DATA: ProfileInfo = {
   ],
   skills: [
     {
-      category: "Full-Stack & Mobile Engineering",
-      items: ["React 19", "Next.js 16", "TypeScript", "Node.js", "Express", "Flutter / Dart", "Prisma", "PostgreSQL", "SQLite / SQLCipher", "Firebase Auth / Firestore", "Tailwind CSS 4", "REST & GraphQL"]
+      category: "AI & Workflow Automation",
+      items: ["n8n (Self-Hosted & Cloud)", "Zapier Multi-Step Zaps", "Make (Integromat)", "LLM & Agentic Pipelines", "Webhook & REST API Triggers", "Automated CRM & Support Routing"]
     },
     {
-      category: "AI & LLM Integrations",
-      items: ["Google Gemini API", "Groq (Llama 3.1)", "Cloudflare Workers AI", "pgvector RAG Semantic Search", "Web Workers In-Browser Profiling", "Tesseract OCR", "Multi-Provider AI Failover Architecture"]
+      category: "CMS & Full-Stack Engineering",
+      items: ["WordPress (Custom Themes & Plugins)", "WooCommerce", "Elementor & Gutenberg", "React 19", "Next.js 16", "TypeScript", "Flutter / Dart", "Node.js", "PostgreSQL / pgvector", "Tailwind CSS 4"]
     },
     {
       category: "Technical Content & Medical Writing",
-      items: ["SOAP Notes", "H&P Documentation", "E/M Coding Standards", "HIPAA Compliance", "User Manuals & Technical Docs", "SEO Content Strategy", "Developer Documentation", "Product Case Studies"]
+      items: ["SOAP Notes", "H&P Documentation", "E/M Coding Standards", "HIPAA Compliance", "User Manuals & Technical Docs", "SEO Content Strategy", "Developer API Documentation", "Product Case Studies"]
     },
     {
       category: "Leadership & Quality Operations",

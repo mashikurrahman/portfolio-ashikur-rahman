@@ -97,17 +97,20 @@ export const CVModal: React.FC = () => {
         {/* Core Competencies Grid */}
         <div className="space-y-3">
           <h3 className="text-xs font-mono font-bold text-gray-800 uppercase tracking-wider">
-            Core Competencies & Skills
+            Core Competencies & Technical Skills
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {CV_DATA.coreCompetencies.map((cat, idx) => (
               <div key={idx} className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-2">
-                <h4 className="text-xs font-bold text-gray-900 uppercase font-mono">{cat.category}</h4>
+                <h4 className="text-xs font-bold text-gray-900 uppercase font-mono flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#E8461E]" />
+                  {cat.category}
+                </h4>
                 <div className="flex flex-wrap gap-1.5">
                   {cat.items.map((item, iIdx) => (
                     <span
                       key={iIdx}
-                      className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-white text-gray-700 border border-gray-200 shadow-xs"
+                      className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-white text-gray-700 border border-gray-200 shadow-xs"
                     >
                       {item}
                     </span>

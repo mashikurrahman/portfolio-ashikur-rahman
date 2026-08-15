@@ -20,6 +20,8 @@ import {
 const SERVICE_OPTIONS = [
   '💻 Web App (React / Next.js)',
   '🤖 AI & LLM Systems',
+  '⚡ AI Automation (n8n / Zapier)',
+  '🌐 WordPress & CMS Dev',
   '📱 Mobile App (Flutter)',
   '📝 Tech & Medical Docs',
   '💼 Job Offer / Full-Time',
@@ -29,15 +31,19 @@ const SERVICE_OPTIONS = [
 const MESSAGE_SHORTCUTS = [
   {
     label: '🚀 New Project',
-    text: "Hi Ashikur, I'd like to discuss a new web/mobile project. Let's talk scope, architecture, and timeline."
+    text: "Hi Ashikur, I'd like to discuss building a new web/mobile product. Let's talk scope, architecture, and timeline."
+  },
+  {
+    label: '⚡ AI Automation / n8n',
+    text: "Hi Ashikur, we need help automating workflows using n8n / Zapier / Make with custom AI and webhook integrations."
+  },
+  {
+    label: '🌐 WordPress / Web Dev',
+    text: "Hi Ashikur, looking for custom WordPress theme/plugin engineering or modern web development for our company."
   },
   {
     label: '💼 Job Opportunity',
-    text: "Hi Ashikur, we have an open role for a Full-Stack / AI Engineer and would love to schedule an introductory interview."
-  },
-  {
-    label: '🤖 AI / RAG Build',
-    text: "Hi Ashikur, we need technical guidance building an AI assistant / RAG pipeline for our product."
+    text: "Hi Ashikur, we have an open role for a Full-Stack / AI Automation Engineer and would love to schedule an introductory interview."
   },
   {
     label: '📝 Documentation',
