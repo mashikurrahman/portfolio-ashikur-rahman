@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowUpRight,
   ArrowRight,
@@ -8,6 +9,7 @@ import {
   Globe,
   Sparkles,
   ChevronRight,
+  ChevronLeft,
   X as XIcon,
   Star,
   CheckCircle2,
@@ -15,10 +17,69 @@ import {
   Code2,
   Cpu,
   Layers,
-  ArrowUp
+  ArrowUp,
+  LayoutGrid,
+  Sliders,
+  Maximize2
 } from 'lucide-react';
 import { CASE_STUDIES, PROFILE_DATA } from '../../data/portfolioData';
 import { useThemeLayout } from '../../context/ThemeLayoutContext';
+
+/* ─── Ambient Background Glow Spheres ─── */
+const AmbientBackgroundGlow: React.FC = () => (
+  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden overflow-x-hidden">
+    <div className="absolute -top-[15%] left-[20%] w-[500px] h-[500px] rounded-full bg-[#E8461E]/5 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+    <div className="absolute top-[40%] -right-[10%] w-[450px] h-[450px] rounded-full bg-amber-500/5 blur-[140px] animate-pulse" style={{ animationDuration: '10s' }} />
+    <div className="absolute top-[75%] left-[10%] w-[400px] h-[400px] rounded-full bg-[#E8461E]/4 blur-[130px]" />
+  </div>
+);
+
+/* ─── Interactive 3D Tilt Component ─── */
+interface TiltProps {
+  children: React.ReactNode;
+  className?: string;
+  maxTilt?: number;
+}
+
+const TiltCard: React.FC<TiltProps> = ({ children, className = '', maxTilt = 8 }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const tiltX = ((y - centerY) / centerY) * -maxTilt;
+    const tiltY = ((x - centerX) / centerX) * maxTilt;
+    setTilt({ x: tiltX, y: tiltY });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      className={className}
+      style={{
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(${isHovered ? 1.015 : 1}, ${isHovered ? 1.015 : 1}, 1)`,
+        transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out',
+        transformStyle: 'preserve-3d',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 /* ─── Rotating "HIRE ME" badge ─── */
 const HireBadge: React.FC = () => {
@@ -135,6 +196,8 @@ export const EditorialLayout: React.FC = () => {
   const { setSelectedCaseStudyId, setIsCVOpen, setIsContactOpen } = useThemeLayout();
   const [openService, setOpenService] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [viewMode, setViewMode] = useState<'grid' | 'spotlight'>('grid');
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
   const services = [
     {
@@ -178,35 +241,74 @@ export const EditorialLayout: React.FC = () => {
     ? CASE_STUDIES
     : CASE_STUDIES.filter((cs) => cs.category === selectedCategory);
 
+  const currentSpotlight = filteredProjects[activeSlideIndex % filteredProjects.length] || filteredProjects[0];
+
+  const handleNextSlide = () => {
+    setActiveSlideIndex((prev) => (prev + 1) % filteredProjects.length);
+  };
+
+  const handlePrevSlide = () => {
+    setActiveSlideIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
+    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
+      {/* Background Ambient Glow */}
+      <AmbientBackgroundGlow />
+
       {/* ─── HERO ─── */}
-      <section className="hero-section" id="top">
-        <p className="hero-eyebrow">— <span>Hello There!</span></p>
-        <h1 className="hero-name">
+      <section className="hero-section relative z-10" id="top">
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="hero-eyebrow"
+        >
+          — <span>Hello There!</span>
+        </motion.p>
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="hero-name"
+        >
           I'm <span className="accent">Ashikur Rahman</span>
-        </h1>
-        <p className="hero-subtitle">Product Builder, Technical Lead & AI Engineer based in Bangladesh</p>
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="hero-subtitle"
+        >
+          Product Builder, Technical Lead & AI Engineer based in Bangladesh
+        </motion.p>
 
         <div className="hero-body">
           {/* Left: Quote + Reviews */}
-          <div className="hero-left">
-            <div className="hero-quote">
-              <div className="hero-quote-icon">“</div>
-              <p>Ashikur's engineering and documentation expertise transformed our clinical platform — highly recommended!</p>
-              <div className="flex items-center gap-1 text-amber-500 mt-2 text-xs">
-                <Star size={13} fill="currentColor" />
-                <Star size={13} fill="currentColor" />
-                <Star size={13} fill="currentColor" />
-                <Star size={13} fill="currentColor" />
-                <Star size={13} fill="currentColor" />
-                <span className="text-[11px] font-bold text-gray-700 ml-1">5.0 Star Rating</span>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="hero-left"
+          >
+            <TiltCard maxTilt={5}>
+              <div className="hero-quote">
+                <div className="hero-quote-icon">“</div>
+                <p>Ashikur's engineering and documentation expertise transformed our clinical platform — highly recommended!</p>
+                <div className="flex items-center gap-1 text-amber-500 mt-2 text-xs">
+                  <Star size={13} fill="currentColor" />
+                  <Star size={13} fill="currentColor" />
+                  <Star size={13} fill="currentColor" />
+                  <Star size={13} fill="currentColor" />
+                  <Star size={13} fill="currentColor" />
+                  <span className="text-[11px] font-bold text-gray-700 ml-1">5.0 Star Rating</span>
+                </div>
               </div>
-            </div>
+            </TiltCard>
 
             <div className="hero-reviews">
               <div className="avatar-stack">
@@ -220,14 +322,21 @@ export const EditorialLayout: React.FC = () => {
                 <small>From Valued Clients, US MDs & Tech Leaders</small>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Center: Portrait with backdrop & centered CTA */}
-          <div className="hero-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="hero-center"
+          >
             <div className="portrait-wrap">
-              <div className="portrait-img-box">
-                <img src={PROFILE_DATA.avatar} alt={PROFILE_DATA.name} />
-              </div>
+              <TiltCard maxTilt={6}>
+                <div className="portrait-img-box">
+                  <img src={PROFILE_DATA.avatar} alt={PROFILE_DATA.name} />
+                </div>
+              </TiltCard>
               <HireBadge />
 
               {/* Floating Centered CTA Buttons Overlapping Bottom */}
@@ -247,10 +356,15 @@ export const EditorialLayout: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right: Floating colored tags + social */}
-          <div className="hero-right">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="hero-right"
+          >
             <div className="hero-tags-cloud">
               <div className="hero-tag-row">
                 <span className="tag-pill tag-dark">Full-Stack</span>
@@ -286,7 +400,7 @@ export const EditorialLayout: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -294,8 +408,14 @@ export const EditorialLayout: React.FC = () => {
       <MarqueeStrip />
 
       {/* ─── SERVICES ─── */}
-      <section className="services-section" id="services">
-        <div className="services-header">
+      <section className="services-section relative z-10" id="services">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="services-header"
+        >
           <div>
             <p className="services-eyebrow">— My Specialization</p>
             <h2 className="services-title">
@@ -306,7 +426,7 @@ export const EditorialLayout: React.FC = () => {
           <p className="services-desc">
             Bridging complex technical architecture, clinical accuracy, and seamless customer experiences across 6+ years of multidisciplinary work.
           </p>
-        </div>
+        </motion.div>
 
         <div className="service-list">
           {services.map((svc, idx) => (
@@ -333,80 +453,260 @@ export const EditorialLayout: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── PROJECTS ─── */}
-      <section className="projects-section" id="projects">
-        <div className="projects-header">
+      {/* ─── PROJECTS (With Grid / Spotlight Slider Toggle) ─── */}
+      <section className="projects-section relative z-10" id="projects">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="projects-header"
+        >
           <p className="services-eyebrow">— Selected Work</p>
           <h2 className="projects-title">
             Shipped <span className="accent">Projects</span>
           </h2>
           <p className="projects-subtitle">Explore 9 shipped platforms spanning Healthcare AI, E-Commerce, Multi-Tenant Platforms, RAG Support Coaches & Executive Engineering.</p>
 
-          {/* Interactive Category Filter Pills */}
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold font-mono transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-[#E8461E] text-white shadow-sm shadow-[#E8461E]/30'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
+          {/* Interactive Controls Bar: Filter Pills + View Switcher */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setActiveSlideIndex(0);
+                  }}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-mono transition-all cursor-pointer ${
+                    selectedCategory === cat
+                      ? 'bg-[#E8461E] text-white shadow-sm shadow-[#E8461E]/30'
+                      : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-        <div className="project-grid">
-          {filteredProjects.map((project) => (
-            <button
-              className="project-card group"
-              key={project.id}
-              onClick={() => setSelectedCaseStudyId(project.id)}
-            >
-              <div className="project-card-image">
-                <img src={project.image} alt={project.title} loading="lazy" />
-                <span className="project-card-arrow"><ArrowUpRight size={16} /></span>
-                {project.metrics[0] && (
-                  <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-white/90 backdrop-blur-sm text-gray-900 shadow-xs">
-                    {project.metrics[0].value}
+            {/* View Mode Switcher */}
+            <div className="inline-flex items-center p-1 rounded-full bg-white border border-gray-200 shadow-xs">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
+                  viewMode === 'grid'
+                    ? 'bg-[#1A1A1A] text-white'
+                    : 'text-gray-500 hover:text-gray-900'
+                }`}
+                title="Grid View"
+              >
+                <LayoutGrid size={13} />
+                <span>Grid</span>
+              </button>
+              <button
+                onClick={() => setViewMode('spotlight')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold transition-all ${
+                  viewMode === 'spotlight'
+                    ? 'bg-[#E8461E] text-white shadow-sm'
+                    : 'text-gray-500 hover:text-gray-900'
+                }`}
+                title="Interactive Spotlight Slider View"
+              >
+                <Sliders size={13} />
+                <span>Spotlight Slider</span>
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* VIEW 1: SPOTLIGHT SLIDER DECK */}
+        {viewMode === 'spotlight' && currentSpotlight && (
+          <div className="mt-8">
+            <div className="relative bg-white border border-gray-200 rounded-3xl p-6 sm:p-9 shadow-xl overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                {/* Left Info Column */}
+                <div className="lg:col-span-5 space-y-4 text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#E8461E]/10 text-[#E8461E]">
+                      #{currentSpotlight.number} of {filteredProjects.length}
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-gray-100 text-gray-700">
+                      {currentSpotlight.category}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-extrabold font-heading text-gray-900 leading-tight">
+                    {currentSpotlight.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                    {currentSpotlight.subtitle}
+                  </p>
+
+                  <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono text-gray-500">
+                      <span>Primary Metric</span>
+                      <strong className="text-[#E8461E] font-bold text-sm">
+                        {currentSpotlight.metrics[0]?.value || '100%'}
+                      </strong>
+                    </div>
+                    <p className="text-[11px] text-gray-500 line-clamp-2">
+                      {currentSpotlight.problem}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {currentSpotlight.tags.map((t, idx) => (
+                      <span key={idx} className="px-2.5 py-1 rounded-md text-[11px] font-mono bg-gray-100 text-gray-700">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-3">
+                    <button
+                      onClick={() => setSelectedCaseStudyId(currentSpotlight.id)}
+                      className="px-5 py-2.5 rounded-full bg-[#E8461E] text-white font-bold text-xs shadow-md shadow-[#E8461E]/20 hover:bg-[#d13a14] transition-all flex items-center gap-2"
+                    >
+                      <span>Explore Case Study</span>
+                      <Maximize2 size={13} />
+                    </button>
+                    {currentSpotlight.liveUrl && (
+                      <a
+                        href={currentSpotlight.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2.5 rounded-full border border-gray-200 text-xs font-semibold text-gray-700 hover:border-gray-900 transition-colors flex items-center gap-1.5"
+                      >
+                        <span>Live App</span>
+                        <ArrowUpRight size={13} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Image Banner Column */}
+                <div className="lg:col-span-7 relative group cursor-pointer" onClick={() => setSelectedCaseStudyId(currentSpotlight.id)}>
+                  <TiltCard maxTilt={5}>
+                    <div className="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-100 shadow-md max-h-[380px]">
+                      <img
+                        src={currentSpotlight.image}
+                        alt={currentSpotlight.title}
+                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-103"
+                      />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity grid place-items-center">
+                        <span className="px-4 py-2 rounded-full bg-white text-gray-900 font-bold text-xs shadow-lg flex items-center gap-1.5">
+                          <span>View Full Details</span>
+                          <ArrowRight size={13} />
+                        </span>
+                      </div>
+                    </div>
+                  </TiltCard>
+                </div>
+              </div>
+
+              {/* Slider Bottom Navigation & Progress Track */}
+              <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePrevSlide}
+                    className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 grid place-items-center transition-colors cursor-pointer"
+                    aria-label="Previous Slide"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={handleNextSlide}
+                    className="w-9 h-9 rounded-full bg-[#E8461E] hover:bg-[#d13a14] text-white grid place-items-center shadow-sm transition-colors cursor-pointer"
+                    aria-label="Next Slide"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                  <span className="text-xs font-mono text-gray-400 ml-2">
+                    Slide {activeSlideIndex + 1} of {filteredProjects.length}
                   </span>
-                )}
-              </div>
-              <div className="project-card-body">
-                <div className="flex items-center justify-between gap-1 mb-1">
-                  <div className="project-card-number">#{project.number}</div>
-                  <span className="text-[10px] font-mono text-gray-400">{project.year}</span>
                 </div>
-                <h3 className="project-card-title group-hover:text-[#E8461E] transition-colors">
-                  {project.title}
-                </h3>
-                <div className="project-card-category">{project.category}</div>
-                <div className="flex flex-wrap gap-1 mt-2.5">
-                  {project.tags.slice(0, 3).map((t, idx) => (
-                    <span key={idx} className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-gray-100 text-gray-600">
-                      {t}
-                    </span>
+
+                {/* Thumbnail Dots */}
+                <div className="flex items-center gap-1.5">
+                  {filteredProjects.map((p, idx) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setActiveSlideIndex(idx)}
+                      className={`h-2 rounded-full transition-all ${
+                        activeSlideIndex === idx ? 'w-6 bg-[#E8461E]' : 'w-2 bg-gray-200 hover:bg-gray-300'
+                      }`}
+                      aria-label={`Go to slide ${idx + 1}`}
+                    />
                   ))}
-                  {project.tags.length > 3 && (
-                    <span className="px-1.5 py-0.5 rounded-md text-[10px] font-mono text-gray-400">
-                      +{project.tags.length - 3}
-                    </span>
-                  )}
                 </div>
               </div>
-            </button>
-          ))}
-        </div>
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 2: RESPONSIVE GRID MODE */}
+        {viewMode === 'grid' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="project-grid"
+          >
+            {filteredProjects.map((project) => (
+              <TiltCard key={project.id} maxTilt={6}>
+                <button
+                  className="project-card group w-full"
+                  onClick={() => setSelectedCaseStudyId(project.id)}
+                >
+                  <div className="project-card-image">
+                    <img src={project.image} alt={project.title} loading="lazy" />
+                    <span className="project-card-arrow"><ArrowUpRight size={16} /></span>
+                    {project.metrics[0] && (
+                      <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-white/90 backdrop-blur-sm text-gray-900 shadow-xs">
+                        {project.metrics[0].value}
+                      </span>
+                    )}
+                  </div>
+                  <div className="project-card-body">
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <div className="project-card-number">#{project.number}</div>
+                      <span className="text-[10px] font-mono text-gray-400">{project.year}</span>
+                    </div>
+                    <h3 className="project-card-title group-hover:text-[#E8461E] transition-colors">
+                      {project.title}
+                    </h3>
+                    <div className="project-card-category">{project.category}</div>
+                    <div className="flex flex-wrap gap-1 mt-2.5">
+                      {project.tags.slice(0, 3).map((t, idx) => (
+                        <span key={idx} className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-gray-100 text-gray-600">
+                          {t}
+                        </span>
+                      ))}
+                      {project.tags.length > 3 && (
+                        <span className="px-1.5 py-0.5 rounded-md text-[10px] font-mono text-gray-400">
+                          +{project.tags.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              </TiltCard>
+            ))}
+          </motion.div>
+        )}
       </section>
 
       {/* ─── ABOUT & CAREER TIMELINE ─── */}
-      <section className="about-section" id="about">
+      <section className="about-section relative z-10" id="about">
         <div className="about-inner">
-          <div className="about-left">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="about-left"
+          >
             <p className="eyebrow">— A Little About Me</p>
             <h2>Building with<br /><span className="accent">Intention.</span></h2>
             <div className="pt-4 hidden lg:block">
@@ -418,58 +718,71 @@ export const EditorialLayout: React.FC = () => {
                 <ArrowRight size={13} />
               </button>
             </div>
-          </div>
-          <div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <p className="about-body-text">{PROFILE_DATA.bio}</p>
 
             {/* Experience Highlights Mini Timeline */}
             <div className="space-y-3 mb-8">
-              <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h4 className="text-sm font-bold text-gray-900">Team Leader of Customer Service</h4>
-                  <p className="text-xs font-mono text-[#E8461E]">Capelli Sports • 2025 – Present</p>
+              <TiltCard maxTilt={3}>
+                <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-900">Team Leader of Customer Service</h4>
+                    <p className="text-xs font-mono text-[#E8461E]">Capelli Sports • 2025 – Present</p>
+                  </div>
+                  <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 self-start sm:self-auto">
+                    Active Leadership
+                  </span>
                 </div>
-                <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 self-start sm:self-auto">
-                  Active Leadership
-                </span>
-              </div>
+              </TiltCard>
 
-              <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h4 className="text-sm font-bold text-gray-900">Sr. Technical Content Writer</h4>
-                  <p className="text-xs font-mono text-[#E8461E]">BJIT • 2021 – 2025</p>
+              <TiltCard maxTilt={3}>
+                <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-900">Sr. Technical Content Writer</h4>
+                    <p className="text-xs font-mono text-[#E8461E]">BJIT • 2021 – 2025</p>
+                  </div>
+                  <span className="text-[11px] font-mono text-gray-500 font-semibold self-start sm:self-auto">
+                    4 Years Excellence
+                  </span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-500 font-semibold self-start sm:self-auto">
-                  4 Years Excellence
-                </span>
-              </div>
+              </TiltCard>
 
-              <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h4 className="text-sm font-bold text-gray-900">Sr. Medical Documentation Specialist</h4>
-                  <p className="text-xs font-mono text-[#E8461E]">Augmedix BD • 2019 – 2021</p>
+              <TiltCard maxTilt={3}>
+                <div className="p-4 rounded-2xl bg-[#FAFAFA] border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-900">Sr. Medical Documentation Specialist</h4>
+                    <p className="text-xs font-mono text-[#E8461E]">Augmedix BD • 2019 – 2021</p>
+                  </div>
+                  <span className="text-[11px] font-mono text-gray-500 font-semibold self-start sm:self-auto">
+                    95–100% Clinical Accuracy
+                  </span>
                 </div>
-                <span className="text-[11px] font-mono text-gray-500 font-semibold self-start sm:self-auto">
-                  95–100% Clinical Accuracy
-                </span>
-              </div>
+              </TiltCard>
             </div>
 
             {/* Stats Grid */}
             <div className="about-stats">
               {PROFILE_DATA.stats.map((stat, i) => (
-                <div className="about-stat" key={i}>
-                  <div className="about-stat-value">{stat.value}</div>
-                  <div className="about-stat-label">{stat.label}</div>
-                </div>
+                <TiltCard key={i} maxTilt={5}>
+                  <div className="about-stat">
+                    <div className="about-stat-value">{stat.value}</div>
+                    <div className="about-stat-label">{stat.label}</div>
+                  </div>
+                </TiltCard>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ─── FOOTER CTA ─── */}
-      <section className="footer-cta" id="contact">
+      <section className="footer-cta relative z-10" id="contact">
         <p className="services-eyebrow">— Let's Create</p>
         <h2>Something <span className="accent">Great</span></h2>
         <p>Have an ambitious project, an open engineering role, or a technical inquiry? Let's build something that makes an impact.</p>
@@ -490,11 +803,11 @@ export const EditorialLayout: React.FC = () => {
         </div>
       </section>
 
-      <div className="footer-bar flex flex-col sm:flex-row items-center justify-between gap-3 max-w-6xl mx-auto">
+      <div className="footer-bar flex flex-col sm:flex-row items-center justify-between gap-3 max-w-6xl mx-auto relative z-10">
         <span>© {new Date().getFullYear()} Mohammad Ashikur Rahman — Built with React 19, TypeScript & Tailwind CSS 4</span>
         <button
           onClick={scrollToTop}
-          className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-[#E8461E] font-mono transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-[#E8461E] font-mono transition-colors cursor-pointer"
         >
           <span>Back to top</span>
           <ArrowUp size={13} />

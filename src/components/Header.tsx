@@ -3,7 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useThemeLayout } from '../context/ThemeLayoutContext';
 
 export const Header: React.FC = () => {
-  const { setIsContactOpen, setIsCVOpen } = useThemeLayout();
+  const { setIsContactOpen, setIsCVOpen, setIsCmdPaletteOpen } = useThemeLayout();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('top');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -105,7 +105,15 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Header Action Buttons */}
-        <div className="hidden sm:flex items-center gap-2.5">
+        <div className="hidden sm:flex items-center gap-2">
+          <button
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 text-xs font-mono text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors"
+            onClick={() => setIsCmdPaletteOpen(true)}
+            title="Search projects & actions (Ctrl+K / ⌘K)"
+          >
+            <span>Search</span>
+            <kbd className="px-1.5 py-0.2 rounded bg-gray-100 text-[10px] font-bold text-gray-500 border border-gray-200">⌘K</kbd>
+          </button>
           <button
             className="px-4 py-2 rounded-full border border-gray-200 text-xs font-semibold text-gray-700 hover:border-gray-900 transition-colors"
             onClick={() => setIsCVOpen(true)}
