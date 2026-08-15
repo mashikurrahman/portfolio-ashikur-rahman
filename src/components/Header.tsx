@@ -14,7 +14,7 @@ export const Header: React.FC = () => {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 30);
+          setIsScrolled(window.scrollY > 25);
 
           const sections = ['top', 'services', 'projects', 'about', 'contact'];
           const scrollPos = window.scrollY + 120;
@@ -54,12 +54,12 @@ export const Header: React.FC = () => {
     <header className={`site-header-wrapper ${isScrolled ? 'is-scrolled' : ''}`}>
       <div className="header-capsule">
         {/* Brand with subtle pulsing status */}
-        <div className="flex items-center gap-3">
+        <div className="header-brand-group">
           <a href="#top" onClick={(e) => scrollToSection(e, 'top')} className="header-brand">
             <span className="header-brand-icon">A</span>
-            Ashikur.
+            <span className="header-brand-name">Ashikur.</span>
           </a>
-          <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span className="header-status-badge">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Available
           </span>
@@ -104,18 +104,18 @@ export const Header: React.FC = () => {
           </a>
         </nav>
 
-        {/* Header Action Buttons */}
-        <div className="hidden sm:flex items-center gap-2">
+        {/* Header Action Buttons with Guaranteed No-Wrap */}
+        <div className="header-actions">
           <button
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 text-xs font-mono text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors"
+            className="header-search-btn"
             onClick={() => setIsCmdPaletteOpen(true)}
             title="Search projects & actions (Ctrl+K / ⌘K)"
           >
             <span>Search</span>
-            <kbd className="px-1.5 py-0.2 rounded bg-gray-100 text-[10px] font-bold text-gray-500 border border-gray-200">⌘K</kbd>
+            <kbd className="header-search-kbd">⌘K</kbd>
           </button>
           <button
-            className="px-4 py-2 rounded-full border border-gray-200 text-xs font-semibold text-gray-700 hover:border-gray-900 transition-colors"
+            className="header-resume-btn"
             onClick={() => setIsCVOpen(true)}
           >
             Resume
