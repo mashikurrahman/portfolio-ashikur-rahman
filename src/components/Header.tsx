@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useThemeLayout } from '../context/ThemeLayoutContext';
 
 export const Header: React.FC = () => {
@@ -9,26 +9,35 @@ export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 30);
 
-      const sections = ['top', 'services', 'projects', 'about', 'contact'];
-      const scrollPos = window.scrollY + 100;
+          const sections = ['top', 'services', 'projects', 'about', 'contact'];
+          const scrollPos = window.scrollY + 120;
 
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(sectionId);
-            break;
+          for (const sectionId of sections) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPos >= top && scrollPos < top + height) {
+                setActiveSection(sectionId);
+                break;
+              }
+            }
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -42,8 +51,8 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className={`site-header ${isScrolled ? 'scrolled shadow-sm' : ''}`}>
-      <div className="header-inner">
+    <header className={`site-header-wrapper ${isScrolled ? 'is-scrolled' : ''}`}>
+      <div className="header-capsule">
         {/* Brand with subtle pulsing status */}
         <div className="flex items-center gap-3">
           <a href="#top" onClick={(e) => scrollToSection(e, 'top')} className="header-brand">
@@ -117,18 +126,14 @@ export const Header: React.FC = () => {
           aria-label="Toggle Menu"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile Slide-down Menu */}
       {mobileMenuOpen && (
-        <div
-          className={`md:hidden bg-white/95 backdrop-blur-md px-6 py-5 space-y-3 animate-in slide-in-from-top-2 ${
-            isScrolled ? 'rounded-3xl border border-gray-200 mt-2 shadow-xl' : 'border-b border-gray-200'
-          }`}
-        >
-          <nav className="flex flex-col gap-2.5">
+        <div className="mobile-nav-panel animate-in slide-in-from-top-2">
+          <nav className="flex flex-col gap-2">
             <a
               href="#top"
               onClick={(e) => scrollToSection(e, 'top')}
