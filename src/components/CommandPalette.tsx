@@ -18,16 +18,16 @@ export const CommandPalette: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setIsCmdPaletteOpen((prev) => !prev);
+        setIsCmdPaletteOpen((prev: boolean) => !prev);
       }
-      if (e.key === 'Escape' && isCmdPaletteOpen) {
+      if (e.key === 'Escape') {
         setIsCmdPaletteOpen(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isCmdPaletteOpen, setIsCmdPaletteOpen]);
+  }, [setIsCmdPaletteOpen]);
 
   if (!isCmdPaletteOpen) return null;
 

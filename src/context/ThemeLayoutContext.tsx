@@ -11,11 +11,11 @@ interface ThemeLayoutContextType {
   selectedCaseStudyId: string | null;
   setSelectedCaseStudyId: (id: string | null) => void;
   isCVOpen: boolean;
-  setIsCVOpen: (open: boolean) => void;
+  setIsCVOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isContactOpen: boolean;
-  setIsContactOpen: (open: boolean) => void;
+  setIsContactOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isCmdPaletteOpen: boolean;
-  setIsCmdPaletteOpen: (open: boolean) => void;
+  setIsCmdPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ThemeLayoutContext = createContext<ThemeLayoutContextType | undefined>(undefined);
