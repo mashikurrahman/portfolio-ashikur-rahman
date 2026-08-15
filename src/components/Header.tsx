@@ -123,7 +123,11 @@ export const Header: React.FC = () => {
 
       {/* Mobile Slide-down Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-md border-b border-gray-200 px-6 py-5 space-y-3 animate-in slide-in-from-top-2">
+        <div
+          className={`md:hidden bg-white/95 backdrop-blur-md px-6 py-5 space-y-3 animate-in slide-in-from-top-2 ${
+            isScrolled ? 'rounded-3xl border border-gray-200 mt-2 shadow-xl' : 'border-b border-gray-200'
+          }`}
+        >
           <nav className="flex flex-col gap-2.5">
             <a
               href="#top"
