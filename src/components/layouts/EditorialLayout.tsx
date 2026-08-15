@@ -20,7 +20,8 @@ import {
   ArrowUp,
   LayoutGrid,
   Sliders,
-  Maximize2
+  Maximize2,
+  Github
 } from 'lucide-react';
 import { CASE_STUDIES, PROFILE_DATA } from '../../data/portfolioData';
 import { useThemeLayout } from '../../context/ThemeLayoutContext';
@@ -411,7 +412,7 @@ export const EditorialLayout: React.FC = () => {
                   <Mail size={14} />
                 </a>
                 <a href="https://github.com/mashikurrahman" target="_blank" rel="noreferrer" title="GitHub" className="social-btn">
-                  <Globe size={14} />
+                  <Github size={14} />
                 </a>
                 <button onClick={() => setIsContactOpen(true)} title="Location / Contact" className="social-btn">
                   <MapPin size={14} />
@@ -816,6 +817,9 @@ export const EditorialLayout: React.FC = () => {
 
         <div className="footer-info">
           <span className="footer-info-item"><Mail size={16} /> {PROFILE_DATA.email}</span>
+          <a href="https://github.com/mashikurrahman" target="_blank" rel="noreferrer" className="footer-info-item" style={{ textDecoration: 'none' }}>
+            <Github size={16} /> github.com/mashikurrahman
+          </a>
           <span className="footer-info-item"><MapPin size={16} /> {PROFILE_DATA.location}</span>
           <span className="footer-info-item"><Globe size={16} /> Remote Worldwide</span>
         </div>
