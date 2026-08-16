@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="arGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5722"/>
+      <stop offset="100%" stop-color="#E8461E"/>
+    </linearGradient>
+    <filter id="subtleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <!-- Outer Rounded Capsule / Circle -->
+  <rect width="64" height="64" rx="20" fill="url(#arGrad)"/>
+  
+  <!-- Stylized Monogram AR using Hero Signature Script Font -->
+  <text 
+    x="32" 
+    y="40" 
+    text-anchor="middle" 
+    font-family="'Dancing Script', 'Brush Script MT', 'Segoe Script', cursive, sans-serif" 
+    font-size="34" 
+    font-weight="700" 
+    fill="#FFFFFF"
+    letter-spacing="-1px"
+    filter="url(#subtleShadow)"
+  >AR</text>
+  
+  <!-- Small spark accent dot -->
+  <circle cx="50" cy="18" r="2.5" fill="#FFF0EB" opacity="0.9"/>
+</svg>
